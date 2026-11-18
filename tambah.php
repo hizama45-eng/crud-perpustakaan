@@ -1,23 +1,28 @@
 <?php
 include "koneksi.php";
 
+$kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
+
 if (isset($_POST['simpan'])) {
+
     $kode = $_POST['kode_buku'];
     $judul = $_POST['judul_buku'];
     $stok = $_POST['stok'];
     $sinopsis = $_POST['sinopsis'];
     $status = $_POST['status_pinjam'];
-    $kategori = $_POST['kategori'];
+    $kategori_buku = $_POST['kategori'];
 
-    $sql = "INSERT INTO buku (kode_buku, judul_buku, stok, sinopsis, status_pinjam, kategori)
-    VALUES ('$kode', '$judul', '$stok', '$sinopsis', '$status', '$kategori')";
+    $sql = "INSERT INTO buku
+    (kode_buku, judul_buku, stok, sinopsis, status_pinjam, kategori)
+    VALUES ('$kode', '$judul', '$stok', '$sinopsis', '$status', '$kategori_buku')";
 
     $simpan = mysqli_query($koneksi, $sql);
 
     if ($simpan) {
-        header("Location: index.php?pesn=Data berhasil ditambahkan"); exit;
+        header("Location: index.php?pesan=Data berhasil ditambahkan");
+        exit;
     } else {
-        echo "Gagal menyimpan data:". mysqli_error($koneksi); 
+        echo "Gagal menyimpan: " . mysqli_error($koneksi);
     }
 }
 ?>
@@ -29,41 +34,136 @@ if (isset($_POST['simpan'])) {
 </head>
 <body>
 
-    <h2>Tambah Data Buku</h2>
-        <form method="POST" action="">
+<h2>Tambah Data Buku</h2>
 
-        <label>Kode Buku:</label><br>
-        <input type="text" name="kode_buku"><br><br>
+<form method="POST">
 
-        <label>Judul Buku:</label><br>
-        <input type="teks" name="judul_buku"><br><br>
+    Kode Buku:<br>
+    <input type="text" name="kode_buku" required>
+    <br><br>
 
-        <label>Stok:</label><br>
-        <input type="number" name="stok"><br><br>
+    Judul Buku:<br>
+    <input type="text" name="judul_buku" required>
+    <br><br>
 
-        <label>Sinopsis:</label><br>
-        <textarea name="sinopsis"></textarea><br><br>
+    Stok:<br>
+    <input type="number" name="stok" required>
+    <br><br>
 
-        <label>Status Pinjam:</label><br>
-        <input type="radio" name="status_pinjam" value="Tersedia">Tersedia<br>
-        <input type="radio" name="status_pinjam" value="Dipinjam">Dipinjam<br>
+    Sinopsis:<br>
+    <textarea name="sinopsis"></textarea>
+    <br><br>
 
-        <label>Kategori:<br></label><br>
+    Status Pinjam:<br>
+    <input type="radio" name="status_pinjam" value="Tersedia" required> Tersedia
+    <input type="radio" name="status_pinjam" value="Dipinjam"> Dipinjam
+    <br><br>
 
-    <select name="kategori">
-        <option value="Pelajaran"></option>
-        <option value="Novel">Novel</option>
-        <option value="Komik">Komik</option>
-        <option value="Sains">Sains</option>
-        <option value="Sejarah">Sejarah</option>
+    Kategori:<br>
+    <select name="kategori" required>
+        <option value="">-- Pilih Kategori --</option>
+
+        <?php while ($data = mysqli_fetch_assoc($kategori)) { ?>
+            <option value="<?php echo htmlspecialchars($data['nama_kategori']); ?>">
+                <?php echo htmlspecialchars($data['nama_kategori']); ?>
+            </option>
+        <?php } ?>
+
     </select>
+
     <br><br>
 
     <button type="submit" name="simpan">Simpan</button>
 
 </form>
-        <br>
-    <a href="index.php">Kembali</a>
-    
+
+<br>
+<a href="index.php">Kembali</a>
+
+</body>
+</html>
+
+<?php
+include "koneksi.php";
+
+$kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
+
+if (isset($_POST['simpan'])) {
+
+    $kode = $_POST['kode_buku'];
+    $judul = $_POST['judul_buku'];
+    $stok = $_POST['stok'];
+    $sinopsis = $_POST['sinopsis'];
+    $status = $_POST['status_pinjam'];
+    $kategori_buku = $_POST['kategori'];
+
+    $sql = "INSERT INTO buku
+    (kode_buku, judul_buku, stok, sinopsis, status_pinjam, kategori)
+    VALUES ('$kode', '$judul', '$stok', '$sinopsis', '$status', '$kategori_buku')";
+
+    $simpan = mysqli_query($koneksi, $sql);
+
+    if ($simpan) {
+        header("Location: index.php?pesan=Data berhasil ditambahkan");
+        exit;
+    } else {
+        echo "Gagal menyimpan: " . mysqli_error($koneksi);
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tambah Buku</title>
+</head>
+<body>
+
+<h2>Tambah Data Buku</h2>
+
+<form method="POST">
+
+    Kode Buku:<br>
+    <input type="text" name="kode_buku" required>
+    <br><br>
+
+    Judul Buku:<br>
+    <input type="text" name="judul_buku" required>
+    <br><br>
+
+    Stok:<br>
+    <input type="number" name="stok" required>
+    <br><br>
+
+    Sinopsis:<br>
+    <textarea name="sinopsis"></textarea>
+    <br><br>
+
+    Status Pinjam:<br>
+    <input type="radio" name="status_pinjam" value="Tersedia" required> Tersedia
+    <input type="radio" name="status_pinjam" value="Dipinjam"> Dipinjam
+    <br><br>
+
+    Kategori:<br>
+    <select name="kategori" required>
+        <option value="">-- Pilih Kategori --</option>
+
+        <?php while ($data = mysqli_fetch_assoc($kategori)) { ?>
+            <option value="<?php echo htmlspecialchars($data['nama_kategori']); ?>">
+                <?php echo htmlspecialchars($data['nama_kategori']); ?>
+            </option>
+        <?php } ?>
+
+    </select>
+
+    <br><br>
+
+    <button type="submit" name="simpan">Simpan</button>
+
+</form>
+
+<br>
+<a href="index.php">Kembali</a>
+
 </body>
 </html>

@@ -1,15 +1,25 @@
 <?php
 include "koneksi.php";
+
 $id = $_GET['id'];
+
 $query = mysqli_query($koneksi, "SELECT * FROM buku WHERE id = '$id'");
 $data = mysqli_fetch_assoc($query);
+
+$kategori = mysqli_query($koneksi, "SELECT * FROM kategori");
+
+if (!$data) {
+    die("Data buku tidak ditemukan!");
+}
+
 if (isset($_POST['update'])) {
+
     $kode = $_POST['kode_buku'];
     $judul = $_POST['judul_buku'];
     $stok = $_POST['stok'];
     $sinopsis = $_POST['sinopsis'];
     $status = $_POST['status_pinjam'];
-    $kategori = $_POST['kategori'];
+    $kategori_buku = $_POST['kategori'];
 
     $sql = "UPDATE buku SET
     kode_buku = '$kode',
@@ -17,69 +27,85 @@ if (isset($_POST['update'])) {
     stok = '$stok',
     sinopsis = '$sinopsis',
     status_pinjam = '$status',
-    kategori ='$kategori' 
-    WHERE id = $id";
+    kategori = '$kategori_buku'
+    WHERE id = '$id'";
 
+    $ubah = mysqli_query($koneksi, $sql);
 
-$ubah = mysqli_query($koneksi,$sql);
-if ($ubah){
-    header("Location:index.php? pesan=Data berhasil diubah");
-    exit;
-} else {
-    echo "Gagal mengubah data:" . mysqli_error($koneksi);
-}
+    if ($ubah) {
+        header("Location: index.php?pesan=Data berhasil diubah");
+        exit;
+    } else {
+        echo "Gagal mengubah data: " . mysqli_error($koneksi);
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-   
     <title>Edit Buku</title>
 </head>
 <body>
-    <h2>Edit Data Buku</h2>
-    <form method="POST" action="">
 
-    <label>Kode Buku:</label><br>
-    <input type="text" name="kode_buku" value="<?php echo $data['kode_buku'];?>" required><br><br>
+<h2>Edit Data Buku</h2>
 
-    <label>Judul Buku:</label><br>
-    <input type="text" name="judul_buku" value="<?php echo $data['judul_buku'];?>" required><br><br>
+<form method="POST">
 
-      <label>Stok:</label><br>
-    <input type="number" name="stok" value="<?php echo $data['stok'];?>" required><br><br>
+    Kode Buku:<br>
+    <input type="text" name="kode_buku" value="<?php echo htmlspecialchars($data['kode_buku']); ?>" required>
+    <br><br>
 
-      <label>Sinopsis:</label><br>
-    <textarea name="sinopsis" required><?php echo $data['sinopsis'];?></textarea><br><br>
+    Judul Buku:<br>
+    <input type="text" name="judul_buku" value="<?php echo htmlspecialchars($data['judul_buku']); ?>" required>
+    <br><br>
 
-    <label>Status Pinjam:</label><br>
+    Stok:<br>
+    <input type="number" name="stok" value="<?php echo $data['stok']; ?>" required>
+    <br><br>
 
-<input type="radio" name="status_pinjam" value="Tersedia" <?php if ($data['status_pinjam'] == 'Tersedia') echo 'checked'; ?> required>
-Tersedia
-<br>
-<input type="radio" name="status_pinjam" value="Dipinjam" <?php if ($data['status_pinjam'] == 'Dipinjam') echo 'checked'; ?>>
-Dipinjam
-<br><br>
+    Sinopsis:<br>
+    <textarea name="sinopsis" required><?php echo htmlspecialchars($data['sinopsis']); ?></textarea>
+    <br><br>
 
-<label>Kategori:</label><br>
-<select name="kategori" required>
+    Status Pinjam:<br>
 
-<option value="Pelajaran" <?php if ($data['kategori'] == 'Pelajaran') echo 'selected'; ?>>Pelajaran</option>
+    <input type="radio" name="status_pinjam" value="Tersedia"
+    <?php if ($data['status_pinjam'] == 'Tersedia') echo 'checked'; ?> required>
+    Tersedia
 
-<option value="Novel" <?php if ($data['kategori'] == 'Novel') echo 'selected'; ?>>Novel</option>
+    <input type="radio" name="status_pinjam" value="Dipinjam"
+    <?php if ($data['status_pinjam'] == 'Dipinjam') echo 'checked'; ?>>
+    Dipinjam
 
-<option value="Komik" <?php if ($data['kategori'] == 'Komik') echo 'selected'; ?>>Komik</option>
+    <br><br>
 
-<option value="Sains" <?php if ($data['kategori'] == 'Sains') echo 'selected'; ?>>Sains</option>
+    Kategori:<br>
+    <select name="kategori" required>
 
-<option value="Sejarah" <?php if ($data['kategori'] == 'Sejarah') echo 'selected'; ?>>Sejarah</option>
+        <option value="">-- Pilih Kategori --</option>
 
-</select>
-<br><br>
-<button type="submit" name="update">Update</button>
+        <?php while ($k = mysqli_fetch_assoc($kategori)) { ?>
+
+            <option value="<?php echo htmlspecialchars($k['nama_kategori']); ?>"
+            <?php if ($data['kategori'] == $k['nama_kategori']) echo 'selected'; ?>>
+
+                <?php echo htmlspecialchars($k['nama_kategori']); ?>
+
+            </option>
+
+        <?php } ?>
+
+    </select>
+
+    <br><br>
+
+    <button type="submit" name="update">Update</button>
+
 </form>
+
 <br>
 <a href="index.php">Kembali</a>
+
 </body>
 </html>

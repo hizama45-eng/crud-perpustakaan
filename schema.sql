@@ -13,9 +13,10 @@ CREATE TABLE buku (
 );
 
 INSERT INTO buku (kode_buku, judul_buku, stok, sinopsis, status_pinjam, kategori)
+VALUES
 
-('B001', 'Harimau berburu Kancil', 5, 'Buku ini menceritakan ketakutan Kancil dengan Harimau.', 'Tersedia', 'Komik')
-('B002', 'Kancil dan Buaya', 3, 'Kancil yang cerdik mengelabui Buaya.', 'Tersedia', 'Komik')
-('B003', 'Kancil dan Singa', 2, 'Kancil yang cerdik mengelabui Singa.', 'Tersedia', 'Komik')
-('B004', 'Kancil dan Harimau', 4, 'Kancil yang cerdik mengelabui Harimau.', 'Tersedia', 'Komik')
+('B001', 'Harimau berburu Kancil', 5, 'Buku ini menceritakan ketakutan Kancil dengan Harimau.', 'Tersedia', 'Komik'),
+('B002', 'Kancil dan Buaya', 3, 'Kancil yang cerdik mengelabui Buaya.', 'Tersedia', 'Komik'),
+('B003', 'Kancil dan Singa', 2, 'Kancil yang cerdik mengelabui Singa.', 'Tersedia', 'Komik'),
+('B004', 'Kancil dan Harimau', 4, 'Kancil yang cerdik mengelabui Harimau.', 'Tersedia', 'Komik'),
 ('B005', 'Kancil dan Gajah', 1, 'Kancil yang cerdik mengelabui Gajah.', 'Tersedia', 'Komik');

@@ -4,9 +4,15 @@ include "koneksi.php";
 if (isset($_GET['cari'])) {
     $cari = mysqli_real_escape_string($koneksi, $_GET['cari']);
 
-    $query = mysqli_query($koneksi, "SELECT * FROM buku WHERE judul_buku LIKE '%$cari%'");
+    $query = mysqli_query($koneksi, "SELECT buku.*, kategori.gambar
+    FROM buku
+    LEFT JOIN kategori ON buku.kategori = kategori.nama_kategori
+    WHERE buku.judul_buku LIKE '%$cari%'");
+
 } else {
-    $query = mysqli_query($koneksi, "SELECT * FROM buku");
+    $query = mysqli_query($koneksi, "SELECT buku.*, kategori.gambar
+    FROM buku
+    LEFT JOIN kategori ON buku.kategori = kategori.nama_kategori");
 }
 ?>
 
@@ -20,6 +26,10 @@ if (isset($_GET['cari'])) {
 <h2>Daftar Buku Perpustakaan</h2>
 
 <a href="tambah.php">+ Tambah Buku</a>
+
+<br><br>
+
+<a href="kategori/index.php">Kelola Kategori</a>
 
 <br><br>
 
@@ -43,6 +53,7 @@ if (isset($_GET['cari'])) {
     <th>Sinopsis</th>
     <th>Status Pinjam</th>
     <th>Kategori</th>
+    <th>Gambar Kategori</th>
     <th>Aksi</th>
 </tr>
 
@@ -54,16 +65,23 @@ while ($data = mysqli_fetch_assoc($query)) {
 
 <tr>
     <td><?php echo $no++; ?></td>
-    <td><?php echo $data['kode_buku']; ?></td>
-    <td><?php echo $data['judul_buku']; ?></td>
+    <td><?php echo htmlspecialchars($data['kode_buku']); ?></td>
+    <td><?php echo htmlspecialchars($data['judul_buku']); ?></td>
     <td><?php echo $data['stok']; ?></td>
-    <td><?php echo $data['sinopsis']; ?></td>
-    <td><?php echo $data['status_pinjam']; ?></td>
-    <td><?php echo $data['kategori']; ?></td>
+    <td><?php echo htmlspecialchars($data['sinopsis']); ?></td>
+    <td><?php echo htmlspecialchars($data['status_pinjam']); ?></td>
+    <td><?php echo htmlspecialchars($data['kategori']); ?></td>
 
     <td>
-        <a href="edit.php?id=<?php echo $data['id']; ?>">Edit</a>
+        <?php if (!empty($data['gambar'])) { ?>
+            <img src="gambar/<?php echo htmlspecialchars($data['gambar']); ?>" width="80">
+        <?php } else { ?>
+            Tidak ada gambar
+        <?php } ?>
+    </td>
 
+    <td>
+        <a href="edit.php?id=<?php echo $data['id']; ?>">Edit</a> |
         <a href="hapus.php?id=<?php echo $data['id']; ?>"
         onclick="return confirm('Yakin hapus data ini?')">Hapus</a>
     </td>
