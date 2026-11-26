@@ -1,4 +1,6 @@
 <?php
+include "../auth.php";
+cek_login("../");
 include "../koneksi.php";
 
 $id = (int) $_GET['id'];
@@ -25,6 +27,13 @@ if (isset($_POST['update'])) {
         }
 
         $ext = strtolower(pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION));
+
+        // hanya izinkan ekstensi gambar
+        $boleh = ["jpg", "jpeg", "jpe", "png", "gif", "webp"];
+        if (!in_array($ext, $boleh)) {
+            die("Format gambar harus jpg, jpeg, png, gif, atau webp!");
+        }
+
         $gambar = uniqid() . "." . $ext;
 
         move_uploaded_file($tmp, "../gambar/" . $gambar);
@@ -53,6 +62,7 @@ if (isset($_POST['update'])) {
 <html>
 <head>
     <title>Edit Kategori</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 

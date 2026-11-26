@@ -1,4 +1,7 @@
 <?php
+
+include "auth.php";
+cek_login();
 include "koneksi.php";
 
 if (isset($_GET['cari'])) {
@@ -20,6 +23,7 @@ if (isset($_GET['cari'])) {
 <html>
 <head>
     <title>Data Buku</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -32,6 +36,7 @@ if (isset($_GET['cari'])) {
 <a href="kategori/index.php">Kelola Kategori</a>
 
 <br><br>
+<a href="logout.php" onclick="return confirm('Yakin ingin logout?')">Logout</a>
 
 <form method="GET" action="">
     <input type="text" name="cari" placeholder="Cari judul buku..."

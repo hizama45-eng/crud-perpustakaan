@@ -1,6 +1,8 @@
 <?php
-include "koneksi.php";
 
+include "auth.php";
+cek_login();
+include "koneksi.php";
 $id = $_GET['id'];
 
 $query = mysqli_query($koneksi, "SELECT * FROM buku WHERE id = '$id'");
@@ -45,6 +47,7 @@ if (isset($_POST['update'])) {
 <html>
 <head>
     <title>Edit Buku</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 

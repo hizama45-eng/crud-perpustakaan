@@ -1,7 +1,8 @@
 <?php
 
+include "auth.php";
+cek_login();
 include "koneksi.php";
-
 $id = $_GET['id'];
 
 $hapus = mysqli_query($koneksi, "DELETE FROM buku WHERE id = '$id'");

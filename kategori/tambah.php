@@ -1,53 +1,70 @@
 <?php
+include "../auth.php";
+cek_login("../");
 include "../koneksi.php";
 
-$query = mysqli_query($koneksi, "SELECT * FROM kategori");
+if (isset($_POST['simpan'])) {
+
+    $nama = mysqli_real_escape_string($koneksi, $_POST['nama_kategori']);
+
+    if ($_FILES['gambar']['error'] == 0) {
+
+        $tmp = $_FILES['gambar']['tmp_name'];
+
+        $info = getimagesize($tmp);
+
+        if ($info === false) {
+            die("File harus berupa gambar!");
+        }
+
+        $ext = strtolower(pathinfo($_FILES['gambar']['name'], PATHINFO_EXTENSION));
+
+        // hanya izinkan ekstensi gambar
+        $boleh = ["jpg", "jpeg", "jpe", "png", "gif", "webp"];
+        if (!in_array($ext, $boleh)) {
+            die("Format gambar harus jpg, jpeg, png, gif, atau webp!");
+        }
+
+        $gambar = uniqid() . "." . $ext;
+
+        if (move_uploaded_file($tmp, "../gambar/" . $gambar)) {
+
+            mysqli_query($koneksi, "INSERT INTO kategori
+            (nama_kategori, gambar)
+            VALUES ('$nama', '$gambar')");
+
+            header("Location: index.php");
+            exit;
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Data Kategori</title>
+    <title>Tambah Kategori</title>
 </head>
 <body>
 
-<h2>Daftar Kategori Buku</h2>
+<h2>Tambah Kategori</h2>
 
-<a href="tambah.php">+ Tambah Kategori</a>
+<form method="POST" enctype="multipart/form-data">
 
-<br><br>
+    Nama Kategori:
+    <input type="text" name="nama_kategori" required>
+    <br><br>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>No</th>
-        <th>Nama Kategori</th>
-        <th>Gambar</th>
-        <th>Aksi</th>
-    </tr>
+    Gambar:
+    <input type="file" name="gambar" accept="image/*" required>
+    <br><br>
 
-    <?php
-    $no = 1;
-    while ($data = mysqli_fetch_assoc($query)) {
-    ?>
+    <button type="submit" name="simpan">Simpan</button>
 
-    <tr>
-        <td><?php echo $no++; ?></td>
-        <td><?php echo $data['nama_kategori']; ?></td>
-        <td>
-            <img src="../gambar/<?php echo htmlspecialchars($data['gambar']); ?>" width="100">
-        </td>
-        <td>
-            <a href="edit.php?id=<?php echo $data['id']; ?>">Edit</a> |
-            <a href="hapus.php?id=<?php echo $data['id']; ?>" onclick="return confirm('Yakin ingin menghapus?')">Hapus</a>
-        </td>
-    </tr>
-
-    <?php } ?>
-
-</table>
+</form>
 
 <br>
-<a href="../index.php">Kembali ke Data Buku</a>
+<a href="index.php">Kembali</a>
 
 </body>
 </html>

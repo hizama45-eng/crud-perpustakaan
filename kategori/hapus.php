@@ -1,4 +1,6 @@
 <?php
+include "../auth.php";
+cek_login("../");
 include "../koneksi.php";
 
 $id = (int) $_GET['id'];

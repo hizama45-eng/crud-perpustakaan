@@ -1,4 +1,6 @@
 <?php
+include "../auth.php";
+cek_login("../");
 include "../koneksi.php";
 
 $query = mysqli_query($koneksi, "SELECT * FROM kategori");
@@ -8,6 +10,7 @@ $query = mysqli_query($koneksi, "SELECT * FROM kategori");
 <html>
 <head>
     <title>Data Kategori</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 

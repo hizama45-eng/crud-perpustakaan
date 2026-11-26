@@ -1,7 +1,3 @@
-CREATE DATABASE perpustakaan;
-
-USE perpustakaan;
-
 CREATE TABLE buku (
     id INT AUTO_INCREMENT PRIMARY KEY,
     kode_buku VARCHAR(20),
